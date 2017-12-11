@@ -1,6 +1,6 @@
 # NAME
 
-Test::APIcast - It's new $module
+Test::APIcast - Testing framework for [APIcast](https://github.com/3scale/apicast).
 
 # SYNOPSIS
 
@@ -8,15 +8,15 @@ Test::APIcast - It's new $module
 
 # DESCRIPTION
 
-Test::APIcast is ...
+Test::APIcast is testing framework for the APIcast gateway.
 
 # LICENSE
 
-Copyright (C) Michal Cichra.
+Copyright (C) Red Hat Inc.
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+it under the terms of Apache License Version 2.0.
 
 # AUTHOR
 
-Michal Cichra <michal@cichra.cz>
+Michal Cichra <mcichra@redhat.com>

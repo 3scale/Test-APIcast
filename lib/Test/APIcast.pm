@@ -158,7 +158,7 @@ __END__
 
 =head1 NAME
 
-Test::APIcast - It's new $module
+Test::APIcast - Testing framework for L<APIcast|https://github.com/3scale/apicast>.
 
 =head1 SYNOPSIS
 
@@ -166,18 +166,18 @@ Test::APIcast - It's new $module
 
 =head1 DESCRIPTION
 
-Test::APIcast is ...
+Test::APIcast is testing framework for the APIcast gateway.
 
 =head1 LICENSE
 
-Copyright (C) Michal Cichra.
+Copyright (C) Red Hat Inc.
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+it under the terms of Apache License Version 2.0.
 
 =head1 AUTHOR
 
-Michal Cichra E<lt>michal@cichra.czE<gt>
+Michal Cichra E<lt>mcichra@redhat.comE<gt>
 
 =cut
 

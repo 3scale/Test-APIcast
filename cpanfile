@@ -6,7 +6,10 @@ on 'test' => sub {
     requires 'Test::More', '0.98';
 };
 
-on 'development' => sub {
-  requires 'Devel::StackTrace';
+on 'develop' => sub {
+  requires 'Minilla';
+  requires 'Version::Next';
+  requires 'CPAN::Uploader';
+  requires 'Software::License::Apache_2_0';
 };
 

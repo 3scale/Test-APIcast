@@ -1,5 +1,5 @@
 {
-   "abstract" : "Testing framework for APIcast.",
+   "abstract" : "Testing framework for L<APIcast|https://github.com/3scale/apicast>.",
    "author" : [
       "Michal Cichra <mcichra@redhat.com>"
    ],
@@ -33,18 +33,22 @@
       },
       "develop" : {
          "requires" : {
+            "CPAN::Uploader" : "0",
+            "Minilla" : "0",
+            "Software::License::Apache_2_0" : "0",
             "Test::CPAN::Meta" : "0",
             "Test::MinimumVersion::Fast" : "0.04",
             "Test::PAUSE::Permissions" : "0.04",
             "Test::Pod" : "1.41",
-            "Test::Spellunker" : "v0.2.7"
+            "Test::Spellunker" : "v0.2.7",
+            "Version::Next" : "0"
          }
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008001",
-            "JSON" : "2.97000",
-            "Test::Nginx" : "0.26"
+            "JSON" : "2",
+            "Test::Nginx" : "0.26",
+            "perl" : "v5.10.1"
          }
       },
       "test" : {
@@ -54,7 +58,21 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/3scale/Test-APIcast/issues"
+      },
+      "homepage" : "https://github.com/3scale/Test-APIcast",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/3scale/Test-APIcast.git",
+         "web" : "https://github.com/3scale/Test-APIcast"
+      }
+   },
    "version" : "0.01",
    "x_authority" : "cpan:MCICHRA",
-   "x_serialization_backend" : "JSON::PP version 2.94"
+   "x_contributors" : [
+      "Michal Cichra <michal@cichra.cz>"
+   ],
+   "x_serialization_backend" : "JSON::PP version 2.97000"
 }
