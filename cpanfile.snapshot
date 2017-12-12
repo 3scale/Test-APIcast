@@ -756,12 +756,24 @@ DISTRIBUTIONS
       Params::Validate::XS 1.29
     requirements:
       Carp 0
+      Devel::Peek 0
       Exporter 0
       ExtUtils::CBuilder 0
+      ExtUtils::MakeMaker 0
+      File::Spec 0
+      File::Temp 0
       Module::Build 0.28
       Module::Implementation 0
       Scalar::Util 1.10
+      Test::Fatal 0
+      Test::More 0.96
+      Test::Requires 0
+      Tie::Array 0
+      Tie::Hash 0
       XSLoader 0
+      base 0
+      lib 0
+      overload 0
       perl 5.008001
       strict 0
       vars 0
@@ -924,6 +936,18 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 6.30
       Filter::Util::Call 0
       Spiffy 0.40
+  Test-Fatal-0.014
+    pathname: R/RJ/RJBS/Test-Fatal-0.014.tar.gz
+    provides:
+      Test::Fatal 0.014
+    requirements:
+      Carp 0
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      Test::Builder 0
+      Try::Tiny 0.07
+      strict 0
+      warnings 0
   Test-Harness-3.39
     pathname: L/LE/LEONT/Test-Harness-3.39.tar.gz
     provides:
@@ -1018,6 +1042,15 @@ DISTRIBUTIONS
       Time::HiRes 0
       URI::Escape 0
       perl 5.010001
+  Test-Requires-0.10
+    pathname: T/TO/TOKUHIROM/Test-Requires-0.10.tar.gz
+    provides:
+      Test::Requires 0.10
+    requirements:
+      ExtUtils::MakeMaker 6.64
+      Test::Builder::Module 0
+      Test::More 0.47
+      perl 5.006
   Text-Diff-1.45
     pathname: N/NE/NEILB/Text-Diff-1.45.tar.gz
     provides:
