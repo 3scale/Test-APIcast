@@ -78,9 +78,9 @@ my $write_nginx_config = sub {
     my $PidFile = $Test::Nginx::Util::PidFile;
     my $AccLogFile = $Test::Nginx::Util::AccLogFile;
     my $ServerPort = $Test::Nginx::Util::ServerPort;
-    my $backend_port = TestAPIcast::get_random_port();
-    my $management_port = TestAPIcast::get_random_port();
-    my $echo_port = TestAPIcast::get_random_port();
+    my $backend_port = Test::APIcast::get_random_port();
+    my $management_port = Test::APIcast::get_random_port();
+    my $echo_port = Test::APIcast::get_random_port();
 
     my $sites_d = $block->sites_d;
 
