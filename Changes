@@ -1,6 +1,7 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+    - introduce TEST_NGINX_APICAST_BINARY env
 
 0.03 2017-12-12T09:27:33Z
 
