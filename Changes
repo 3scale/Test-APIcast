@@ -1,6 +1,7 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+    - Forward APICAST_DIR env to nginx
 
 0.04 2018-01-16T14:21:58Z
     - introduce TEST_NGINX_APICAST_BINARY env
