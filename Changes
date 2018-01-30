@@ -1,6 +1,8 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+
+0.05 2018-01-30T16:26:26Z
     - Forward APICAST_DIR env to nginx
 
 0.04 2018-01-16T14:21:58Z
