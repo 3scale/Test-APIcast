@@ -84,6 +84,8 @@ my $write_nginx_config = sub {
     my $management_port = Test::APIcast::get_random_port();
     my $echo_port = Test::APIcast::get_random_port();
 
+    my $environment = $block->environment;
+
     my $sites_d = $block->sites_d;
     my $apicast_cli = $block->apicast || $ApicastBinary;
 
@@ -114,7 +116,10 @@ my $write_nginx_config = sub {
         $configuration_file = "";
     }
 
-    print $env <<_EOC_;
+    if (defined $environment) {
+        print $env $environment;
+    } else {
+        print $env <<_EOC_;
 return {
     worker_processes = '$Workers',
     master_process = '$MasterProcessEnabled',
@@ -137,6 +142,7 @@ return {
     sites_d = [============================[$sites_d]============================],
 }
 _EOC_
+    }
     close $env;
 
     if ($ENV{DEBUG}) {
