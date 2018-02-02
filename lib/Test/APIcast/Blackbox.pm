@@ -105,6 +105,15 @@ my $write_nginx_config = sub {
     }
 
     my ($env, $env_file) = tempfile();
+
+    my $apicast_cmd = "APICAST_CONFIGURATION_LOADER='' $apicast_cli start --test --environment $env_file";
+
+    if (defined $configuration_file) {
+        $apicast_cmd .= " --configuration $configuration_file"
+    } else {
+        $configuration_file = "";
+    }
+
     print $env <<_EOC_;
 return {
     worker_processes = '$Workers',
@@ -130,7 +139,7 @@ return {
 _EOC_
     close $env;
 
-    my $apicast = `APICAST_CONFIGURATION_LOADER="" $apicast_cli start --test --environment $env_file --configuration $configuration_file 2>&1`;
+    my $apicast = `${apicast_cmd} 2>&1`;
     if ($apicast =~ /configuration file (?<file>.+?) test is successful/)
     {
         move($+{file}, $ConfFile);
