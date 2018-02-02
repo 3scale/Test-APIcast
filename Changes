@@ -1,6 +1,8 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+
+0.06 2018-02-02T10:31:00Z
     - Do not require configuration file (for apicast-cli compatibility)
     - Print APIcast command when DEBUG env is set
     - Allow defining environment config in the test block

@@ -69,10 +69,11 @@
          "web" : "https://github.com/3scale/Test-APIcast"
       }
    },
-   "version" : "0.05",
+   "version" : "0.06",
    "x_authority" : "cpan:MCICHRA",
    "x_contributors" : [
-      "Michal Cichra <michal@cichra.cz>"
+      "Michal Cichra <michal@cichra.cz>",
+      "Michal Cichra <mikz@users.noreply.github.com>"
    ],
    "x_serialization_backend" : "JSON::PP version 2.97000"
 }
