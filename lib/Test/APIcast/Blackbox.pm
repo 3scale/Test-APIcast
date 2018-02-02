@@ -139,6 +139,10 @@ return {
 _EOC_
     close $env;
 
+    if ($ENV{DEBUG}) {
+        warn $apicast_cmd;
+    }
+
     my $apicast = `${apicast_cmd} 2>&1`;
     if ($apicast =~ /configuration file (?<file>.+?) test is successful/)
     {
