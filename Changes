@@ -1,6 +1,9 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+    - Do not require configuration file (for apicast-cli compatibility)
+    - Print APIcast command when DEBUG env is set
+    - Allow defining environment config in the test block
 
 0.05 2018-01-30T16:26:26Z
     - Forward APICAST_DIR env to nginx
