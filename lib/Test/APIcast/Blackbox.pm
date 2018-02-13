@@ -14,6 +14,15 @@ BEGIN {
 
 our $ApicastBinary = $ENV{TEST_NGINX_APICAST_BINARY} || 'bin/apicast';
 
+our %EnvToNginx = ();
+
+sub env_to_apicast (@) {
+    my %env = (@_);
+
+    # merge two hashes, new %env takes precedence
+    %EnvToNginx = (%EnvToNginx, %env);
+};
+
 add_block_preprocessor(sub {
     my $block = shift;
     my $seq = $block->seq_num;
@@ -118,12 +127,18 @@ my $write_nginx_config = sub {
 
     my ($env, $env_file) = tempfile();
 
-    my $apicast_cmd = "APICAST_CONFIGURATION_LOADER='' $apicast_cli start --test --environment $env_file";
+    my $apicast_cmd = "APICAST_CONFIGURATION_LOADER='test' $apicast_cli start --test --environment $env_file";
 
     if (defined $configuration_file) {
         $apicast_cmd .= " --configuration $configuration_file"
     } else {
         $configuration_file = "";
+    }
+
+    my @env_list = ();
+
+    for my $key (keys %EnvToNginx) {
+        push @env_list, "$key='$EnvToNginx{$key}'";
     }
 
     if (defined $environment) {
@@ -147,7 +162,7 @@ return {
     },
     env = {
         THREESCALE_CONFIG_FILE = [[$configuration_file]],
-        APICAST_CONFIGURATION_LOADER = 'boot',
+        APICAST_CONFIGURATION_LOADER = 'boot', ${\(join(', ', @env_list))}
     },
     server_name = {
         management = $management_server_name
@@ -186,5 +201,9 @@ BEGIN {
         return $write_nginx_config->($block);
     }
 }
+
+our @EXPORT = qw(
+    env_to_apicast
+);
 
 1;
