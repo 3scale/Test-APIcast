@@ -1,6 +1,8 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+
+0.07 2018-02-13T14:06:10Z
     - Allow defining TEST_NGINX_MANAGEMENT_SERVER
 
 0.06 2018-02-02T10:31:00Z
