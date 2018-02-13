@@ -135,10 +135,11 @@ my $write_nginx_config = sub {
         $configuration_file = "";
     }
 
+    my %env = (%EnvToNginx, $block->env);
     my @env_list = ();
 
-    for my $key (keys %EnvToNginx) {
-        push @env_list, "$key='$EnvToNginx{$key}'";
+    for my $key (keys %env) {
+        push @env_list, "$key='$env{$key}'";
     }
 
     if (defined $environment) {
