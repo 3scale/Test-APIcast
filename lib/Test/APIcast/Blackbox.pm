@@ -81,8 +81,18 @@ my $write_nginx_config = sub {
     my $AccLogFile = $Test::Nginx::Util::AccLogFile;
     my $ServerPort = $Test::Nginx::Util::ServerPort;
     my $backend_port = Test::APIcast::get_random_port();
-    my $management_port = Test::APIcast::get_random_port();
     my $echo_port = Test::APIcast::get_random_port();
+
+    my $management_server_name = $ENV{TEST_NGINX_MANAGEMENT_SERVER_NAME};
+
+    my $management_port;
+    if (defined $management_server_name) {
+        $management_port = $ServerPort;
+        $management_server_name = "'$management_server_name'"
+    } else {
+        $management_port = Test::APIcast::get_random_port();
+        $management_server_name = 'nil'
+    }
 
     my $environment = $block->environment;
 
@@ -138,6 +148,9 @@ return {
     env = {
         THREESCALE_CONFIG_FILE = [[$configuration_file]],
         APICAST_CONFIGURATION_LOADER = 'boot',
+    },
+    server_name = {
+        management = $management_server_name
     },
     sites_d = [============================[$sites_d]============================],
 }
