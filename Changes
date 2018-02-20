@@ -1,6 +1,8 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+
+0.09 2018-02-20T09:27:17Z
     - `random_port` filter returns the same input
 
 0.08 2018-02-14T07:37:23Z
