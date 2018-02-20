@@ -1,6 +1,7 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+    - `random_port` filter returns the same input
 
 0.08 2018-02-14T07:37:23Z
     - `env_to_apicast` to set ENV to APIcast
