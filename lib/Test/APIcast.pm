@@ -113,7 +113,7 @@ our $dns = sub ($$$) {
 };
 
 sub Test::Base::Filter::random_port {
-    my ($self) = @_;
+    my ($self, $code) = @_;
 
     my $block = $self->current_block;
     my $random_port = $block->random_port;
@@ -130,7 +130,7 @@ sub Test::Base::Filter::random_port {
 
     $ENV{TEST_NGINX_RANDOM_PORT} = $random_port;
 
-    return $random_port
+    return $code;
 }
 
 
