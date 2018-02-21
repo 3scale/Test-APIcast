@@ -1,6 +1,7 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+    - `fixture` filter to load fixtures
 
 0.09 2018-02-20T09:27:17Z
     - `random_port` filter returns the same input
