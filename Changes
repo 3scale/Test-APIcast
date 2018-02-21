@@ -1,6 +1,8 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+
+0.10 2018-02-21T14:34:28Z
     - `fixture` filter to load fixtures
 
 0.09 2018-02-20T09:27:17Z

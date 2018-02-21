@@ -46,6 +46,7 @@
       },
       "runtime" : {
          "requires" : {
+            "File::Slurp" : "0",
             "JSON" : "2",
             "Test::Nginx" : "0.26",
             "perl" : "v5.10.1"
@@ -69,7 +70,7 @@
          "web" : "https://github.com/3scale/Test-APIcast"
       }
    },
-   "version" : "0.09",
+   "version" : "0.10",
    "x_authority" : "cpan:MCICHRA",
    "x_contributors" : [
       "David Ortiz <z.david.ortiz@gmail.com>",
