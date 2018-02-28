@@ -192,7 +192,7 @@ _EOC_
         unlink $PidFile or warn "Couldn't remove $PidFile.\n";
     }
 
-    $ENV{APICAST_LOADED_ENVIRONMENTS} = $env_file;
+    $ENV{APICAST_LOADED_ENVIRONMENTS} = join('|',$ env_file, $block->environment_file);
 };
 
 BEGIN {
