@@ -160,6 +160,7 @@ return {
       management = '$management_port',
       backend = '$backend_port',
       echo = '$echo_port',
+      metrics = '$ServerPort',
     },
     env = {
         THREESCALE_CONFIG_FILE = [[$configuration_file]],

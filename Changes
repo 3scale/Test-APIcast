@@ -1,6 +1,7 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+    - set `metrics` port to the same as APIcast
 
 0.10 2018-02-21T14:34:28Z
     - `fixture` filter to load fixtures
