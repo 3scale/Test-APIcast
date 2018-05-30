@@ -4,7 +4,7 @@
       "Michal Cichra <mcichra@redhat.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.0.13, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "Minilla/v3.1.0, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "apache_2_0"
    ],
@@ -70,12 +70,13 @@
          "web" : "https://github.com/3scale/Test-APIcast"
       }
    },
-   "version" : "0.11",
+   "version" : "0.12",
    "x_authority" : "cpan:MCICHRA",
    "x_contributors" : [
       "David Ortiz <z.david.ortiz@gmail.com>",
       "Michal Cichra <michal@cichra.cz>",
       "Michal Cichra <mikz@users.noreply.github.com>"
    ],
-   "x_serialization_backend" : "JSON::PP version 2.97000"
+   "x_serialization_backend" : "JSON::PP version 2.97001",
+   "x_static_install" : 1
 }

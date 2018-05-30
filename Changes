@@ -1,6 +1,8 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+
+0.12 2018-05-30T17:51:32Z
     - hold random ports opened for longer to reduce collisions
     - fixed not failing tests with invalid JSON
 
