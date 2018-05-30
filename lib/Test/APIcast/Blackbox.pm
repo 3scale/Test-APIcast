@@ -205,7 +205,9 @@ BEGIN {
 
     sub Test::Nginx::Util::write_config_file ($$) {
         my $block = shift;
-        return $write_nginx_config->($block);
+        $write_nginx_config->($block);
+
+        Test::APIcast::close_random_ports();
     }
 }
 
