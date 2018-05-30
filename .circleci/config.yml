@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: perl
+    working_directory: /home/test-apicast/
+
+    steps:
+      - run:
+          name: Environment
+          command: |
+            echo 'export PATH=local/bin:$PATH' >> $BASH_ENV
+            echo "export PERL5LIB=$(pwd)/local/lib/perl5" >> $BASH_ENV
+
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-carton-{{ checksum "cpanfile.snapshot" }}-cache
+
+      - run:
+          name: Install dependencies
+          command: |
+            cpanm Carton --local-lib local
+            carton install --deployment --cached
+            carton bundle
+
+      - run: carton exec prove
+
+      - save_cache:
+          key: v1-carton-{{ checksum "cpanfile.snapshot" }}-cache
+          paths:
+            - "./local"
+            - "./vendor/cache"
