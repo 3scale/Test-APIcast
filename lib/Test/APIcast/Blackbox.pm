@@ -130,21 +130,20 @@ my $write_nginx_config = sub {
         }
     }
 
-    my ($env, $env_file) = tempfile();
-
-    my $apicast_cmd = "APICAST_CONFIGURATION_LOADER='test' $apicast_cli start --test --environment $env_file";
-
-    if (defined $configuration_file) {
-        $apicast_cmd .= " --configuration $configuration_file"
-    } else {
-        $configuration_file = "";
-    }
-
     my %env = (%EnvToNginx, $block->env);
     my @env_list = ();
 
     for my $key (keys %env) {
         push @env_list, "$key='$env{$key}'";
+    }
+
+    my ($env, $env_file) = tempfile();
+    my $apicast_cmd = "${\(join(', ', @env_list))} APICAST_CONFIGURATION_LOADER='test' $apicast_cli start --test --environment $env_file";
+
+    if (defined $configuration_file) {
+        $apicast_cmd .= " --configuration $configuration_file"
+    } else {
+        $configuration_file = "";
     }
 
     if (defined $environment) {

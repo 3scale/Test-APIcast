@@ -1,6 +1,7 @@
 Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
+    - Pass ENV from env block to apicast config generator
 
 0.12 2018-05-30T17:51:32Z
     - hold random ports opened for longer to reduce collisions
