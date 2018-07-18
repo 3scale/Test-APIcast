@@ -7,6 +7,7 @@ use JSON;
 use Test::APIcast -Base;
 use File::Copy "move";
 use File::Temp qw/ tempfile /;
+use File::Slurp qw(read_file);
 
 BEGIN {
     $ENV{APICAST_OPENRESTY_BINARY} = $ENV{TEST_NGINX_BINARY};
@@ -106,6 +107,7 @@ _EOC_
 my $write_nginx_config = sub {
     my $block = shift;
 
+    my $FilterHttpConfig = $Test::Nginx::Util::FilterHttpConfig;
     my $ConfFile = $Test::Nginx::Util::ConfFile;
     my $Workers = $Test::Nginx::Util::Workers;
     my $MasterProcessEnabled = $Test::Nginx::Util::MasterProcessEnabled;
@@ -215,7 +217,16 @@ _EOC_
     my $apicast = `${apicast_cmd} 2>&1`;
     if ($apicast =~ /configuration file (?<file>.+?) test is successful/)
     {
-        move($+{file}, $ConfFile);
+        open(my $fh, '+>', $ConfFile) or die "cannot open $ConfFile: $!";
+
+        my $nginx_config = read_file($+{file});
+
+        if ($FilterHttpConfig) {
+            $nginx_config = $FilterHttpConfig->($nginx_config);
+        }
+
+        print { $fh } $nginx_config;
+        close($fh);
     } else {
         warn "Missing config file: $Test::Nginx::Util::ConfFile";
         warn $apicast;
