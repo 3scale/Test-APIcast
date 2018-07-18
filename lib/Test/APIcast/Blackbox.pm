@@ -15,6 +15,7 @@ BEGIN {
 our $ApicastBinary = $ENV{TEST_NGINX_APICAST_BINARY} || 'bin/apicast';
 
 our %EnvToNginx = ();
+our %ResetEnv = ();
 
 sub env_to_apicast (@) {
     my %env = (@_);
@@ -151,14 +152,22 @@ my $write_nginx_config = sub {
     }
 
     my %env = (%EnvToNginx, $block->env);
-    my @env_list = ();
+
+    # reset ENV to memorized state
+    for my $key (keys %ResetEnv) {
+        $ENV{$key} = $ResetEnv{$key};
+        delete $ResetEnv{$key};
+    }
 
     for my $key (keys %env) {
-        push @env_list, "$key='$env{$key}'";
+        # memorize ENV before changing it
+        $ResetEnv{$key} = $ENV{$key};
+        # change ENV to state desired by the test
+        $ENV{$key} = $env{$key};
     }
 
     my ($env, $env_file) = tempfile();
-    my $apicast_cmd = "${\(join(' ', @env_list))} APICAST_CONFIGURATION_LOADER='test' $apicast_cli start --test --environment $env_file";
+    my $apicast_cmd = "APICAST_CONFIGURATION_LOADER='test' $apicast_cli start --test --environment $env_file";
 
     if (defined $configuration_file) {
         $apicast_cmd .= " --configuration $configuration_file"
@@ -188,7 +197,7 @@ return {
     },
     env = {
         THREESCALE_CONFIG_FILE = [[$configuration_file]],
-        APICAST_CONFIGURATION_LOADER = 'boot', ${\(join(', ', @env_list))}
+        APICAST_CONFIGURATION_LOADER = 'boot'
     },
     server_name = {
         management = $management_server_name
