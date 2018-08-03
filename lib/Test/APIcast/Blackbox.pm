@@ -7,6 +7,7 @@ use JSON;
 use Test::APIcast -Base;
 use File::Copy "move";
 use File::Temp qw/ tempfile /;
+use File::Slurp qw(read_file);
 
 BEGIN {
     $ENV{APICAST_OPENRESTY_BINARY} = $ENV{TEST_NGINX_BINARY};
@@ -15,6 +16,7 @@ BEGIN {
 our $ApicastBinary = $ENV{TEST_NGINX_APICAST_BINARY} || 'bin/apicast';
 
 our %EnvToNginx = ();
+our %ResetEnv = ();
 
 sub env_to_apicast (@) {
     my %env = (@_);
@@ -22,6 +24,16 @@ sub env_to_apicast (@) {
     # merge two hashes, new %env takes precedence
     %EnvToNginx = (%EnvToNginx, %env);
 };
+
+my $original_server_port_for_client;
+
+sub set_server_port_for_client (@) {
+    $original_server_port_for_client = $Test::Nginx::Util::ServerPortForClient;
+    Test::Nginx::Util::server_port_for_client(shift);
+    if ($Test::Nginx::Util::Verbose) {
+        warn("changed ServerPortForClient from $original_server_port_for_client to $Test::Nginx::Util::ServerPortForClient");
+    }
+}
 
 add_block_preprocessor(sub {
     my $block = shift;
@@ -49,7 +61,8 @@ add_block_preprocessor(sub {
             }
         }
 _EOC_
-        $Test::Nginx::Util::ServerPortForClient = $test_port;
+
+        set_server_port_for_client($test_port);
         $block->set_value('raw_request', "GET / HTTP/1.1\r\nHost: test\r\nConnection: close\r\n\r\n")
     }
 
@@ -105,6 +118,7 @@ _EOC_
 my $write_nginx_config = sub {
     my $block = shift;
 
+    my $FilterHttpConfig = $Test::Nginx::Util::FilterHttpConfig;
     my $ConfFile = $Test::Nginx::Util::ConfFile;
     my $Workers = $Test::Nginx::Util::Workers;
     my $MasterProcessEnabled = $Test::Nginx::Util::MasterProcessEnabled;
@@ -151,14 +165,26 @@ my $write_nginx_config = sub {
     }
 
     my %env = (%EnvToNginx, $block->env);
-    my @env_list = ();
+
+    # reset ENV to memorized state
+    for my $key (keys %ResetEnv) {
+        if (defined $ResetEnv{$key}) {
+            $ENV{$key} = $ResetEnv{$key};
+        } else {
+            delete $ENV{$key};
+        }
+        delete $ResetEnv{$key};
+    }
 
     for my $key (keys %env) {
-        push @env_list, "$key='$env{$key}'";
+        # memorize ENV before changing it
+        $ResetEnv{$key} = $ENV{$key};
+        # change ENV to state desired by the test
+        $ENV{$key} = $env{$key};
     }
 
     my ($env, $env_file) = tempfile();
-    my $apicast_cmd = "${\(join(' ', @env_list))} APICAST_CONFIGURATION_LOADER='test' $apicast_cli start --test --environment $env_file";
+    my $apicast_cmd = "APICAST_CONFIGURATION_LOADER='test' $apicast_cli start --test --environment $env_file";
 
     if (defined $configuration_file) {
         $apicast_cmd .= " --configuration $configuration_file"
@@ -188,7 +214,7 @@ return {
     },
     env = {
         THREESCALE_CONFIG_FILE = [[$configuration_file]],
-        APICAST_CONFIGURATION_LOADER = 'boot', ${\(join(', ', @env_list))}
+        APICAST_CONFIGURATION_LOADER = 'boot'
     },
     server_name = {
         management = $management_server_name
@@ -208,7 +234,16 @@ _EOC_
 
     if ($log =~ /configuration file (?<file>.+?) test/)
     {
-        move($+{file}, $ConfFile);
+        open(my $fh, '+>', $ConfFile) or die "cannot open $ConfFile: $!";
+
+        my $nginx_config = read_file($+{file});
+
+        if ($FilterHttpConfig) {
+            $nginx_config = $FilterHttpConfig->($nginx_config);
+        }
+
+        print { $fh } $nginx_config;
+        close($fh);
     } else {
         bail_out("Missing config file: $Test::Nginx::Util::ConfFile");
         warn $log;
@@ -245,6 +280,13 @@ sub ignore_missing_directives($) {
     }
 }
 
+add_block_preprocessor(sub {
+    if (defined $original_server_port_for_client) {
+        Test::Nginx::Util::server_port_for_client($original_server_port_for_client);
+        undef $original_server_port_for_client;
+    }
+});
+
 BEGIN {
     no warnings 'redefine';
 
@@ -279,7 +321,7 @@ BEGIN {
             bail_out "check_if_missing_directives: Cannot open $logfile for reading: $!\n";
 
         while (<$in>) {
-            warn "LINE: $_";
+            # warn "LINE: $_";
             # This is changed as the format is following: [emerg] unknown directive "name"
             if (/\[emerg\] unknown directive "([^"]+)"/) {
                 return $1;
