@@ -149,6 +149,16 @@ my $write_nginx_config = sub {
     }
 
     my $environment = $block->environment;
+    my @environments;
+    my $environment_file = $block->environment_file;
+
+    if (defined $environment_file && ref $environment_file eq 'ARRAY') {
+        @environments = @$environment_file;
+    } elsif (defined($environment_file)) {
+        @environments = $environment_file;
+    }
+
+    unshift @environments, 'production';
 
     my $sites_d = $block->sites_d;
     my $apicast_cli = $block->apicast || $ApicastBinary;
@@ -191,12 +201,18 @@ my $write_nginx_config = sub {
     }
 
     my ($env, $env_file) = tempfile();
-    my $apicast_cmd = "APICAST_CONFIGURATION_LOADER='test' $apicast_cli start --test --environment $env_file";
+    push @environments, $env_file;
+
+    my $apicast_cmd = "APICAST_CONFIGURATION_LOADER='test' $apicast_cli start --test";
 
     if (defined $configuration_file) {
         $apicast_cmd .= " --configuration $configuration_file"
     } else {
         $configuration_file = "";
+    }
+
+    foreach my $ef (@environments) {
+        $apicast_cmd .= " --environment $ef"
     }
 
     if (defined $environment) {
@@ -258,7 +274,7 @@ _EOC_
         unlink $PidFile or warn "Couldn't remove $PidFile.\n";
     }
 
-    $ENV{APICAST_LOADED_ENVIRONMENTS} = join('|',$ env_file, $block->environment_file);
+    $ENV{APICAST_LOADED_ENVIRONMENTS} = join('|',@environments);
 };
 
 add_block_preprocessor(sub {
