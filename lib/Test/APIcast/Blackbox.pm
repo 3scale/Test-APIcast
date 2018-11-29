@@ -100,15 +100,21 @@ _EOC_
 _EOC_
     }
 
+    my $configuration_format = $block->configuration_format || 'json';
+
     if (defined $configuration) {
         $configuration = Test::Nginx::Util::expand_env_in_config($configuration);
         {
             local $SIG{__DIE__} = sub {
                 Test::More::fail("$name - configuration block JSON") || Test::More::diag $_[0];
             };
-            decode_json($configuration);
+
+            if ($configuration_format eq 'json') {
+                decode_json($configuration);
+            }
         }
         $block->set_value("configuration", $configuration);
+        $block->set_value("configuration_format", $configuration_format);
     }
 
     $block->set_value("config", "$name ($seq)");
@@ -150,13 +156,14 @@ my $write_nginx_config = sub {
     my $configuration = $block->configuration;
     my $conf;
     my $configuration_file = $block->configuration_file;
+    my $configuration_format = $block->configuration_format;
 
     if (defined $configuration_file) {
         chomp($configuration_file);
         $configuration_file = "$configuration_file";
     } else {
         if (defined $configuration) {
-            ($conf, $configuration_file) = tempfile();
+            ($conf, $configuration_file) = tempfile(SUFFIX => ".$configuration_format");
             print $conf $configuration;
             close $conf;
 
