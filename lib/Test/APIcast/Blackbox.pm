@@ -226,6 +226,7 @@ return {
     master_process = '$MasterProcessEnabled',
     daemon = '$DaemonEnabled',
     error_log = '$err_log_file',
+    timer_resolution = false,
     log_level = '$LogLevel',
     pid = '$PidFile',
     lua_code_cache = 'on',
