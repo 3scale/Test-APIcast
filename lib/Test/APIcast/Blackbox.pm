@@ -41,7 +41,9 @@ add_block_preprocessor(sub {
     my $name = $block->name;
     my $configuration = $block->configuration;
     my $backend = $block->backend;
+    my $backend_name = $block->backend || 'test_backend';
     my $upstream = $block->upstream;
+    my $upstream_name = $block->upstream_name || 'upstream';
     my $test = $block->test;
     my $sites_d = $block->sites_d || '';
     my $ServerPort = $Test::Nginx::Util::ServerPort;
@@ -71,12 +73,12 @@ _EOC_
         server {
             listen $ServerPort;
 
-            server_name test_backend backend;
+            server_name $backend_name backend;
 
             $backend
         }
 
-        upstream test_backend {
+        upstream $backend_name {
             server 127.0.0.1:$ServerPort;
         }
 
@@ -89,12 +91,12 @@ _EOC_
         server {
             listen $ServerPort;
 
-            server_name test;
+            server_name $upstream_name;
 
             $upstream
         }
 
-        upstream test {
+        upstream $upstream_name {
             server 127.0.0.1:$ServerPort;
         }
 _EOC_
