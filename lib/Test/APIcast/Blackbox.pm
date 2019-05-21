@@ -207,7 +207,7 @@ my $write_nginx_config = sub {
 
     my $apicast_cmd = "APICAST_CONFIGURATION_LOADER='test' $apicast_cli start --test";
 
-    if (defined $configuration_file) {
+    if (defined $configuration_file && $configuration_file) {
         $apicast_cmd .= " --configuration $configuration_file"
     } else {
         $configuration_file = "";
