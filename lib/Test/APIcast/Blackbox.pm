@@ -41,9 +41,9 @@ add_block_preprocessor(sub {
     my $name = $block->name;
     my $configuration = $block->configuration;
     my $backend = $block->backend;
-    my $backend_name = $block->backend || 'test_backend';
+    my $backend_name = $block->backend_name || 'test_backend';
     my $upstream = $block->upstream;
-    my $upstream_name = $block->upstream_name || 'upstream';
+    my $upstream_name = $block->upstream_name || 'test';
     my $test = $block->test;
     my $sites_d = $block->sites_d || '';
     my $ServerPort = $Test::Nginx::Util::ServerPort;

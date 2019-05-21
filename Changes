@@ -2,6 +2,9 @@ Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
 
+0.21 2019-05-21T07:41:01Z
+   - Fix configurable upstream and backend names.
+
 0.20 2019-05-21T06:52:44Z
    - Disable timer resolution.
    - Configurable upstream and backend name.
