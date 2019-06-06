@@ -46,13 +46,13 @@ sub get_random_port {
         my $port = int(rand 60000) + 1025;
 
         my $sock = IO::Socket::INET->new(
-            LocalAddr => $Test::Nginx::Util::ServerAddr,
             LocalPort => $port,
             Proto => 'tcp',
-            Timeout => 0.1,
         );
 
         if (defined $sock) {
+            $sock->shutdown(0);
+            $sock->close();
             push @PORTS, $sock;
             $ServerPort = $port;
             last;
