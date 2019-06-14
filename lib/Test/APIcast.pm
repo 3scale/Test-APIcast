@@ -4,7 +4,7 @@ use strict;
 use warnings FATAL => 'all';
 use Fcntl qw(:flock SEEK_END);
 
-our $VERSION = "0.22";
+our $VERSION = "0.23";
 
 BEGIN {
     $ENV{TEST_NGINX_BINARY} ||= 'openresty';
