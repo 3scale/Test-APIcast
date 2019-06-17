@@ -2,6 +2,9 @@ Revision history for Perl extension Test-APIcast
 
 {{$NEXT}}
 
+0.24 2019-06-17T07:49:00Z
+   - No changes.
+
 0.23 2019-06-13T10:00:00Z
    - Lock using file to get random port.
    - Force close ports if are open

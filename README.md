@@ -2,8 +2,6 @@
 
 Test::APIcast - Testing framework for [APIcast](https://github.com/3scale/apicast).
 
-[![CircleCI](https://circleci.com/gh/3scale/Test-APIcast/tree/master.svg?style=shield)](https://circleci.com/gh/3scale/Test-APIcast/tree/master)
-
 # SYNOPSIS
 
     use Test::APIcast;
