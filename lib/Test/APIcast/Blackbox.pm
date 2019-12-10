@@ -255,8 +255,10 @@ _EOC_
         warn $apicast_cmd;
     }
 
-    my $apicast = `${apicast_cmd} 2>&1`;
-    if ($apicast =~ /configuration file (?<file>.+?) test is successful/)
+    Test::Nginx::Util::setup_server_root();
+    my $log = `${apicast_cmd} 2>$Test::Nginx::Util::ErrLogFile; cat $Test::Nginx::Util::ErrLogFile`;
+
+    if ($log =~ /configuration file (?<file>.+?) test/)
     {
         open(my $fh, '+>', $ConfFile) or die "cannot open $ConfFile: $!";
 
@@ -269,8 +271,8 @@ _EOC_
         print { $fh } $nginx_config;
         close($fh);
     } else {
-        warn "Missing config file: $Test::Nginx::Util::ConfFile";
-        warn $apicast;
+        bail_out("Missing config file: $Test::Nginx::Util::ConfFile");
+        warn $log;
     }
 
     if ($PidFile && -f $PidFile) {
@@ -279,6 +281,30 @@ _EOC_
 
     $ENV{APICAST_LOADED_ENVIRONMENTS} = join('|',@environments);
 };
+
+sub ignore_missing_directives($) {
+    my $block = shift;
+    my $ServRoot = $Test::Nginx::Util::ServRoot;
+    my $ConfFile = $Test::Nginx::Util::ConfFile;
+    my $NginxBinary = $Test::Nginx::Util::NginxBinary;
+    my $ErrLogFile = $Test::Nginx::Util::ErrLogFile;
+
+    if (defined $ENV{TEST_NGINX_IGNORE_MISSING_DIRECTIVES}) {
+        Test::Nginx::Util::setup_server_root();
+
+        $write_nginx_config->($block);
+
+        my $test = system("$NginxBinary -p $ServRoot -c $ConfFile -t 2> $ErrLogFile");
+
+        if ( $test != 0) {
+
+            if (my $directive = Test::Nginx::Util::check_if_missing_directives())
+            {
+                return $directive;
+            }
+        }
+    }
+}
 
 add_block_preprocessor(sub {
     if (defined $original_server_port_for_client) {
@@ -290,12 +316,49 @@ add_block_preprocessor(sub {
 BEGIN {
     no warnings 'redefine';
 
+    *original_run_test = \&Test::Nginx::Util::run_test;
+    *Test::Nginx::Util::run_test = sub ($) {
+        my $block = shift;
+
+        SKIP: {
+            my $missing_directive = ignore_missing_directives($block);
+            my $name = $block->name;
+            skip "$name -- tests skipped because of the lack of directive $missing_directive" if $missing_directive;
+
+            original_run_test($block);
+        }
+
+    };
+
     sub Test::Nginx::Util::write_config_file ($$) {
         my $block = shift;
         $write_nginx_config->($block);
 
         Test::APIcast::close_random_ports();
     }
+
+
+    # Copy-paste from Test::Nginx::Util
+
+    sub Test::Nginx::Util::check_if_missing_directives () {
+        my $logfile = $Test::Nginx::Util::ErrLogFile;
+
+        open my $in, $logfile or
+            bail_out "check_if_missing_directives: Cannot open $logfile for reading: $!\n";
+
+        while (<$in>) {
+            # warn "LINE: $_";
+            # This is changed as the format is following: [emerg] unknown directive "name"
+            if (/\[emerg\] unknown directive "([^"]+)"/) {
+                return $1;
+            }
+        }
+
+        close $in;
+
+        return 0;
+    }
+
 }
 
 our @EXPORT = qw(
